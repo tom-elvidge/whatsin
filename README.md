@@ -21,6 +21,24 @@ whatsin$ sam build --use-container
 whatsin$ sam local start-api --docker-network whatsin
 ```
 
+### Start the API development setve
+
+Create virtual environment and install development dependencies.
+
+```shell
+whatsin$ cd api
+whatsin/api$ python3 -m venv venv
+whatsin/api$ pip3 install -e .
+```
+
+Start Flask.
+
+```shell
+whatsin/api$ export FLASK_APP=whatsin
+whatsin/api$ export FLASK_ENV=development
+whatsin/api$ flask run
+```
+
 ### Start the React app in development mode
 
 Change directory to the frontend (web), install the project requirements, and start the development server.
@@ -69,3 +87,5 @@ Deploy the application to the S3 Bucket you created.
 ```bash
 whatsin-web$ aws s3 sync build/ s3://whatsin-web
 ```
+
+Todo: Finish api Dockerfile, must be able to pass in env variables

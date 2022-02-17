@@ -20,4 +20,10 @@ yarn-error.log*
 
 .eslintcache
 
+# python
+__pycache__
 venv
+*.egg-info
+build
+dist
+instance
