@@ -1,11 +1,13 @@
 #!/bin/bash
 
 SECRET=$(python -c 'import secrets; print(secrets.token_hex())')
-echo "SECRET=${SECRET}" >> /api/instance/config.py
-echo "MYSQL_HOST=${MYSQL_HOST}" >> /api/instance/config.py
-echo "MYSQL_PORT=${MYSQL_PORT}" >> /api/instance/config.py
-echo "MYSQL_USER=${MYSQL_USER}" >> /api/instance/config.py
-echo "MYSQL_PASSWORD=${MYSQL_PASSWORD}" >> /api/instance/config.py
-echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> /api/instance/config.py
+CONFIG='/app/instance/config.py'
 
-waitress-serve --call whatsin:create_app
+echo "SECRET='${SECRET}'" >> $CONFIG
+echo "MYSQL_HOST='${MYSQL_HOST}'" >> $CONFIG
+echo "MYSQL_PORT='${MYSQL_PORT}'" >> $CONFIG
+echo "MYSQL_USER='${MYSQL_USER}'" >> $CONFIG
+echo "MYSQL_DATABASE='${MYSQL_DATABASE}'" >> $CONFIG
+echo "MYSQL_PASSWORD='${MYSQL_PASSWORD}'" >> $CONFIG
+
+gunicorn --chdir /app whatsin:app -b 0.0.0.0:8080

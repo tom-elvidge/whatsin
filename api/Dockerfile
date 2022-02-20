@@ -1,27 +1,20 @@
-FROM python:3.9
+FROM python:3.9.10-slim-buster
 
-ENV MYSQL_HOST="localhost"
+# Environment variable defaults
+ENV MYSQL_HOST="0.0.0.0"
 ENV MYSQL_PORT=3306
 ENV MYSQL_USER="root"
 ENV MYSQL_PASSWORD="password"
 ENV MYSQL_DATABASE="WhatsIn"
 
-# python latest
-# upgrade, update, apt, pip
+COPY . /app
+WORKDIR /app
 
-COPY . /api
+RUN chmod +x /app/start.sh
 
-RUN pip install wheel
-RUN python /api/setup.py bdist_wheel
-# Todo: Handle different versions
-RUN pip install /api/dist/whatsin-1.0.0-py3-none-any.whl
-RUN export FLASK_APP=whatsin
-
-RUN pip install waitress
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir --force -r requirements.txt
 
 EXPOSE 8080/tcp
-EXPOSE 8080/udp
 
-RUN chmod +x /api/start.sh
-
-CMD ["/bin/bash", "/api/start.sh"]
+ENTRYPOINT [ "/bin/bash", "/app/start.sh" ]

@@ -3,6 +3,7 @@ import "./style.css";
 import AutosizeInput from "react-input-autosize";
 import IngredientItem from "./components/IngredientItem";
 import ReactLoading from 'react-loading';
+const { REACT_APP_API_BASE_URI } = process.env;
 
 class App extends Component {
 
@@ -92,8 +93,9 @@ class App extends Component {
 
     try {
       // Attempt to get recipe.
-      // resp = await axios.get('https://wk0hcgjyi6.execute-api.eu-west-2.amazonaws.com/Prod/whatsin/'+this.state.searchText);
-      resp = await axios.get('http://127.0.0.1:3000/whatsin/'+this.state.searchText);
+      var uri = REACT_APP_API_BASE_URI + '/' + this.state.searchText;
+      console.log(uri);
+      resp = await axios.get(uri);
       console.log(resp)
     } catch (error) {
       // Log error.

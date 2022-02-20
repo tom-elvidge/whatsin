@@ -1,0 +1,13 @@
+version: '3.5'
+
+services:
+    db:
+        image: mysql:5.7
+        restart: always
+        environment:
+            MYSQL_DATABASE: WhatsIn
+            MYSQL_ROOT_PASSWORD: password
+        volumes:
+            - .:/docker-entrypoint-initdb.d
+        ports:
+            - 3306:3306

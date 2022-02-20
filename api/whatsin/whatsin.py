@@ -1,6 +1,7 @@
+from urllib import response
 import numpy
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, flash, g, jsonify, redirect, render_template, request, session, url_for
 )
 from whatsin.db import get_db
 
@@ -47,11 +48,17 @@ def update(query):
     # Filter to get all the ingredients with a high relative frequency.
     generic_ingredients = filter_ingredients(ingredient_frequencies, 1.5)
     
+    # Create response.
     body = {
         'ingredients': generic_ingredients
     }
+    response = jsonify(body)
 
-    return { 'ingredients': generic_ingredients }
+
+    # Allow CORS.
+    response.headers.add('Access-Control-Allow-Origin', '*')
+
+    return response
 
 
 def get_frequencies(ingredients):

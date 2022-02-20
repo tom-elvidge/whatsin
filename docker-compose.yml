@@ -14,10 +14,11 @@ services:
         networks:
             - whatsin
     api:
-        image: whatsin:1.0.0
+        image: tomelvidge/whatsin-api:latest
         restart: always
         environment:
             MYSQL_HOST: db
+            MYSQL_PORT: 3306
         ports:
             - 8080:8080
         networks:

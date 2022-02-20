@@ -4,88 +4,94 @@
 
 ## Development Environment
 
-### Start and initialise a local MySQL instance
+### Database
 
-Change directory into the database and start the local MySQL database.
+Start a local MySQL database with Docker.
 
 ```shell
-whatsin$ docker-compose up -d
+cd data
+docker-compose up -d
 ```
 
-### Build and start local API
+### Flask API
 
-From the project root directory build the backend code and then run the API locally.
+Create a virtual environment and install the dependencies.
+
+```shell
+cd api
+python -m venv venv
+pip install -e .
+```
+
+Set variables with bash.
 
 ```bash
-whatsin$ sam build --use-container
-whatsin$ sam local start-api --docker-network whatsin
+export FLASK_APP=whatsin
+export FLASK_ENV=development
 ```
 
-### Start the API development setve
+Set variables with PowerShell.
 
-Create virtual environment and install development dependencies.
+```PowerShell
+$env:FLASK_APP='whatsin'
+$env:FLASK_ENV='development'
+```
+
+Start the Flask development server.
 
 ```shell
-whatsin$ cd api
-whatsin/api$ python3 -m venv venv
-whatsin/api$ pip3 install -e .
+python -m flask run
 ```
 
-Start Flask.
+### React App
+
+Set the environment variable for the API base API URI.
+
+```PowerShell
+$env:REACT_APP_API_BASE_URI="http://127.0.0.1:5000/whatsin"
+```
+
+Install the project requirements and start the development server.
 
 ```shell
-whatsin/api$ export FLASK_APP=whatsin
-whatsin/api$ export FLASK_ENV=development
-whatsin/api$ flask run
-```
-
-### Start the React app in development mode
-
-Change directory to the frontend (web), install the project requirements, and start the development server.
-
-```bash
-whatsin$ cd web
-whatsin/web$ npm install
-whatsin/web$ npm start
+cd web
+npm install
+npm start
 ```
 
 This runs the app in the development mode. Open [http://localhost:3001](http://localhost:3001) to view it in the browser.
 
+## Build
+
+Build the Docker image for `whatsin-api`.
+
+```shell
+docker build --no-cache -t tomelvidge/whatsin-api:latest -t tomelvidge/whatsin-api:{version} api
+```
+
+Once built the entire backend can be run locally with docker-compose.
+
+```shell
+docker-compose up -d
+```
+
 ## Deployment
 
-Create an MySQL server instance anywhere you like (AWS RDS, on site, etc).
+Todo: Publish the Docker image for `whatsin-api`.
 
-### Deploy backend using SAM
+The frontend is automatically deployed by Netlify on commits to master. Make sure to update the environment variable for the API base API URI in Netflify.
 
-Update the `api/GetIngredientsFunction/credentials.csv` file with the production credentials.
+The backend (api and database) containers can be deployed anywhere. For the simplest deployment clone this repo and use `docker-compose.yml`.
 
-From the project root directory build the backend code and then deploy with SAM.
+## Troubleshooting
 
-```bash
-whatsin$ sam build --use-container
-whatsin$ sam deploy
+Make sure the config from environment variables has been added to `config.py` on `whatsin-api` container start.
+
+```shell
+docker exec -it whatsin-api-1 /bin/bash
 ```
 
-### Deploy the frontend to S3
-
-Create an AWS S3 Bucket for the build files using these instructions.
-
-Configure the AWS CLI.
-
-```bash
-whatsin-web$ aws configure
+```shell
+cd /app/instance
+cat config.py
 ```
-
-Build the application to the build folder.
-
-```bash
-whatsin-web$ npm run build
-```
-
-Deploy the application to the S3 Bucket you created.
-
-```bash
-whatsin-web$ aws s3 sync build/ s3://whatsin-web
-```
-
-Todo: Finish api Dockerfile, must be able to pass in env variables
