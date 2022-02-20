@@ -10,6 +10,7 @@ ENV MYSQL_DATABASE="WhatsIn"
 COPY . /app
 WORKDIR /app
 
+RUN mkdir /app/instance
 RUN chmod +x /app/start.sh
 
 RUN pip install --upgrade pip
