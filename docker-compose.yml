@@ -14,7 +14,7 @@ services:
         networks:
             - whatsin
     api:
-        image: tomelvidge/whatsin-api:latest
+        image: ghcr.io/tom-elvidge/whatsin-api:latest
         restart: always
         environment:
             MYSQL_HOST: db
